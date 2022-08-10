@@ -3,7 +3,7 @@ pragma solidity ^0.8.16;
 
 import "./Entidades.sol";
 
-contract ERC20 is Entidades {
+contract ERC20 is Entidades{
     mapping(address => uint256) private _balances;
 
     mapping(address => mapping(address => uint256)) private _allowances;
