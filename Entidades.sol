@@ -11,7 +11,7 @@ pragma solidity ^0.8.16;
  */
 contract Entidades {
     struct Candidato {
-        bytes32 name;
+        string name;
         address[] votantes;
         mapping(address => uint256) voterBudget;
         bool electo;
@@ -38,7 +38,7 @@ contract Entidades {
 
     /**Añade un candidato hasta un maximo de x
      */
-    function registerAddress(address candidateDir, bytes32 _name) public {
+    function registerAddress(address candidateDir, string calldata _name) public {
         require(
             listaCandidatos.length <= Plazas,
             "Maximo de candidatos alcanzado"
@@ -47,9 +47,9 @@ contract Entidades {
         listaCandidatos.push(candidateDir);
     }
 
-    function showCandidates() public view returns (bytes32[] memory) {
+    function showCandidates() public view returns (string[] memory) {
         address[] memory maddress = new address[](listaCandidatos.length);
-        bytes32[] memory mcandidate = new bytes32[](listaCandidatos.length);
+        string[] memory mcandidate = new string[](listaCandidatos.length);
         for (uint256 i = 0; i < listaCandidatos.length; i++) {
             maddress[i] = listaCandidatos[i];
             mcandidate[i] = candidates[maddress[i]].name;
