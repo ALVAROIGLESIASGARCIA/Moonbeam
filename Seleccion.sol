@@ -1,12 +1,21 @@
-// SPDX-License-Identifier: No license
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
 import "./Entidades.sol";
 import "./ContractERC20.sol";
 
-abstract contract Seleccion is Entidades, ERC20 {
+interface IERC20{
+        function balanceOf(address account) external view returns (uint256);
+}
+
+ contract Seleccion is Entidades {
     uint256 public asientos = 3;
     uint256 weigth = 1;
+    IERC20 erc20;
+
+    function getERC20 (address contractAddress) public{
+        erc20 = IERC20(address(contractAddress));
+    }
 
     function election() public returns (address[] memory) {
         require(
@@ -15,8 +24,8 @@ abstract contract Seleccion is Entidades, ERC20 {
         );
         address[] memory elegidos = new address[](asientos);
         elegidos[0] = calculate_init_score();
-        for (uint256 i = 0; i < asientos - 1; i++) {
-            for (uint256 j = 0; j < Plazas; j++) {}
+        for (uint256 i = 1; i < asientos-1; i++) {
+            elegidos[i] = calculate_score_it();
         }
         return elegidos;
     }
@@ -30,8 +39,8 @@ abstract contract Seleccion is Entidades, ERC20 {
         address ganador1 = listaCandidatos[0];
         for (uint256 i = 0; i < Plazas; i++) {
             maddress[i] = listaCandidatos[i];
-            candidates[maddress[i]].score = 1 / balanceOf(maddress[i]);
-            if (candidates[maddress[i]].score <= 1 / balanceOf(ganador1)) {
+            candidates[maddress[i]].score = 1 / erc20.balanceOf(maddress[i]);
+            if (candidates[maddress[i]].score <= 1 / erc20.balanceOf(ganador1)) {
                 ganador1 = maddress[i];
             }
         }
@@ -55,10 +64,10 @@ abstract contract Seleccion is Entidades, ERC20 {
             for (uint j = 0; j < candidates[maddress[i]].votantes.length; j++){
                 if(candidates[maddress[i]].electo != true){
                     address vaddress = candidates[maddress[i]].votantes[j];
-                    candidates[maddress[i]].score = candidates[maddress[i]].score + (voters[vaddress].load * candidates[maddress[i]].voterBudget[vaddress]) / balanceOf(maddress[i]);
+                    candidates[maddress[i]].score = candidates[maddress[i]].score + (voters[vaddress].load * candidates[maddress[i]].voterBudget[vaddress]) / erc20.balanceOf(maddress[i]);
                 }
             }
-            if (candidates[maddress[i]].score <= 1 / balanceOf(ganador)) {
+            if (candidates[maddress[i]].score <= 1 / erc20.balanceOf(ganador)) {
                 ganador = maddress[i];
             }
 
