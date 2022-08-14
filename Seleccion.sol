@@ -17,6 +17,10 @@ interface IERC20{
         erc20 = IERC20(address(contractAddress));
     }
 
+    function balance(address addr) public view returns(uint256){
+        return erc20.balanceOf(addr);
+    }
+
     function election() public returns (address[] memory) {
         require(
             listaCandidatos.length >= asientos,
