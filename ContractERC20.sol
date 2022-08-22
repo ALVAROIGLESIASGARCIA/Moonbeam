@@ -4,20 +4,25 @@ pragma solidity ^0.8.16;
 import "./Entidades.sol";
 
 contract ERC20 is Entidades{
+
     mapping(address => uint256) private _balances;
 
     mapping(address => mapping(address => uint256)) private _allowances;
-
+/**
+*   Variables de estado del contrato
+*/
     uint256 private _totalSupply;
-
+    uint256 public _asientos;
+    uint256 weigth = 1;
     string private _name;
     string private _symbol;
     uint8 private _decimals;
 
-    constructor(string memory name_, string memory symbol_) {
+    constructor(string memory name_, string memory symbol_, uint256 asientos_) {
         _name = name_;
         _symbol = symbol_;
         _decimals = 18;
+        _asientos = asientos_;
     }
 
     /**
@@ -116,84 +121,68 @@ contract ERC20 is Entidades{
         _totalSupply = _totalSupply + amount;
         _balances[account] = _balances[account] + amount;
     }
-    /**
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-    uint public asientos = 3;
-    uint256 weigth = 1;
-    function election() public returns(address [] memory){
-        require(listaCandidatos.length >= asientos , "Numero de candidatos inferior al numero de asientos");
-        address [] memory elegidos = new address[](asientos);
-        elegidos[0] = calculate_init_score();
-        for(uint i = 0;i < asientos-1;i++){
-            for(uint j = 0; j < Plazas;j++){
 
-            }
+    function election() public returns (address[] memory) {
+        require(
+            listaCandidatos.length >= _asientos,
+            "Numero de candidatos inferior al numero de asientos"
+        );
+        address[] memory elegidos = new address[](_asientos);
+        elegidos[0] = calculate_init_score();
+        for (uint256 i = 1; i < _asientos-1; i++) {
+            elegidos[i] = calculate_score_it();
         }
         return elegidos;
     }
+
     /**
-    *   Cálculo de los pesos iniciales que es 1/stake (votos recibidos en amount de tokens)
-    *   tambien se devuelve el ganador de la primera ronda
-    
-    function calculate_init_score() public returns(address){
-        address [] memory maddress = new address[](listaCandidatos.length);
+     *   Cálculo de los pesos iniciales que es 1/stake (votos recibidos en amount de tokens)
+     *   tambien se devuelve el ganador de la primera ronda
+     */
+    function calculate_init_score() public returns (address) {
+        address[] memory maddress = new address[](listaCandidatos.length);
         address ganador1 = listaCandidatos[0];
-        for(uint i = 0;i < Plazas;i++){
+        for (uint256 i = 0; i < Plazas; i++) {
             maddress[i] = listaCandidatos[i];
-            candidates[ maddress[i] ].score = 1/balanceOf(maddress[i]);
-            if(candidates[ maddress[i] ].score <= 1/balanceOf(ganador1)){
+            candidates[maddress[i]].score = 1 / balanceOf(maddress[i]);
+            if (candidates[maddress[i]].score <= 1 / balanceOf(ganador1)) {
                 ganador1 = maddress[i];
-            } 
+            }
         }
         candidates[ganador1].electo = true;
         //Calcular el voter load de los votantes
-        for(uint i = 0;i < candidates[ganador1].votantes.length;i++){
-            potters[ candidates[ganador1].votantes[i] ].load = candidates[ganador1].score;
+        for (uint256 i = 0; i < candidates[ganador1].votantes.length; i++) {
+            voters[candidates[ganador1].votantes[i]].load = candidates[ganador1].score;
         }
         return ganador1;
     }
 
     /**
-    *   Cálculo de los pesos iniciales que es 1/stake (votos recibidos en amount de tokens)
-    
-    function calculate_score_it() public returns(address){
-        address [] memory maddress = new address[](listaCandidatos.length);
-        address ganador1 = listaCandidatos[0];
-        for(uint i = 0;i < Plazas;i++){
+     *   Cálculo de los pesos iniciales que es 1/stake (votos recibidos en amount de tokens)
+     */
+    function calculate_score_it() public returns (address) {
+        address[] memory maddress = new address[](listaCandidatos.length);
+        address ganador;
+        for (uint256 i = 0; i < Plazas; i++) {
             maddress[i] = listaCandidatos[i];
             //candidate_score = candidate_score + ((voter_budget * voter_load) / candidate_approval_stake)
+            for (uint j = 0; j < candidates[maddress[i]].votantes.length; j++){
+                if(candidates[maddress[i]].electo != true){
+                    address vaddress = candidates[maddress[i]].votantes[j];
+                    candidates[maddress[i]].score = candidates[maddress[i]].score + (voters[vaddress].load * candidates[maddress[i]].voterBudget[vaddress]) / balanceOf(maddress[i]);
+                }
+            }
+            if (candidates[maddress[i]].score <= 1 / balanceOf(ganador)) {
+                ganador = maddress[i];
+            }
 
-            candidates[ maddress[i] ].score = 1/balanceOf(maddress[i]);
-            if(candidates[ maddress[i] ].score <= 1/balanceOf(ganador1)){
-                ganador1 = maddress[i];
-            } 
         }
-        candidates[ganador1].electo = true;
         //Calcular el voter load de los votantes
-        for(uint i = 0;i < candidates[ganador1].votantes.length;i++){
-            potters[ candidates[ganador1].votantes[i] ].load = candidates[ganador1].score;
+        for (uint256 i = 0; i < candidates[ganador].votantes.length; i++) {
+            voters[candidates[ganador].votantes[i]].load = candidates[
+                ganador
+            ].score;
         }
-        return ganador1;
+        return ganador;
     }
-*/
 }
