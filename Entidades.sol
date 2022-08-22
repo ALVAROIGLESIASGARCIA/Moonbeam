@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: No license
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
 /**
@@ -44,6 +44,15 @@ contract Entidades {
             "Maximo de candidatos alcanzado"
         );
         candidates[candidateDir].name = _name;
+        listaCandidatos.push(candidateDir);
+    }
+
+    function registerAddress2(address candidateDir, string memory name_) public {
+        require(
+            listaCandidatos.length <= Plazas,
+            "Maximo de candidatos alcanzado"
+        );
+        candidates[candidateDir].name = name_;
         listaCandidatos.push(candidateDir);
     }
 

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: No license
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
 import "./Entidades.sol";
@@ -17,12 +17,17 @@ contract ERC20 is Entidades{
     string private _name;
     string private _symbol;
     uint8 private _decimals;
+    address[] public elegidos;
 
     constructor(string memory name_, string memory symbol_, uint256 asientos_) {
         _name = name_;
         _symbol = symbol_;
-        _decimals = 18;
+        _decimals = 0;
         _asientos = asientos_;
+        registerAddress2(0x58954099FA98b6FB59647e5c4804c7aa40455cF2, "Idi Amin");
+        registerAddress2(0x149005A8c7cDc49bC2237e4fB93e3eB687d57eAb, "Stalin");
+        registerAddress2(0x830f5A0fB328831a645E993ad0305F7213f640FC, "Kim Jong Un");
+        registerAddress2(0x249Bfc4F95425243a4C3F536097a445B91Db3417, "Gadafi");
     }
 
     /**
@@ -122,17 +127,25 @@ contract ERC20 is Entidades{
         _balances[account] = _balances[account] + amount;
     }
 
-    function election() public returns (address[] memory) {
+    function showElegidos() public view returns (string[] memory) {
+        address[] memory maddress = new address[](elegidos.length);
+        string[] memory melegidos = new string[](elegidos.length);
+        for (uint256 i = 0; i < elegidos.length; i++) {
+            maddress[i] = elegidos[i];
+            melegidos[i] = candidates[maddress[i]].name;
+        }
+        return melegidos;
+    }
+
+    function election() public{
         require(
             listaCandidatos.length >= _asientos,
             "Numero de candidatos inferior al numero de asientos"
         );
-        address[] memory elegidos = new address[](_asientos);
         elegidos[0] = calculate_init_score();
         for (uint256 i = 1; i < _asientos-1; i++) {
             elegidos[i] = calculate_score_it();
         }
-        return elegidos;
     }
 
     /**
