@@ -2,9 +2,9 @@
 pragma solidity ^0.8.16;
 
 import "./ABDKMath64x64.sol";
-//Prueba [A,D,B]
+//Prueba [A,D,C]
 
-contract ContractERC20 {
+contract VOT2 {
     using ABDKMath64x64 for int128;
 
     mapping(address => uint256) private _balances;
@@ -33,8 +33,8 @@ contract ContractERC20 {
         _mint(0x436C5FDDAf8504a7cABf9fe1465DbCf85A76d3cC, 2);
         _mint(0xfA055C249d1609efb3340B84Bed2c80206203aE1, 4);
         _mint(0x93858492198d0c9E4a6FB7f7A8D2cE7b824F2595, 3);
-        _mint(0x4E868D58667245f7FE0026679E235b080Af67B9a, 12);
-        _mint(0xEAc16CDbc9901920d90bE4808D38aA73Db8CA5Eb, 20);
+        _mint(0x4E868D58667245f7FE0026679E235b080Af67B9a, 4);
+        _mint(0xEAc16CDbc9901920d90bE4808D38aA73Db8CA5Eb, 28);
     }
 
     uint256 Plazas = 4;
@@ -147,7 +147,7 @@ contract ContractERC20 {
         */
         _vote(0x436C5FDDAf8504a7cABf9fe1465DbCf85A76d3cC, 0x149005A8c7cDc49bC2237e4fB93e3eB687d57eAb, 1);
         _vote(0xfA055C249d1609efb3340B84Bed2c80206203aE1, 0x149005A8c7cDc49bC2237e4fB93e3eB687d57eAb, 2);
-        _vote(0x4E868D58667245f7FE0026679E235b080Af67B9a, 0x149005A8c7cDc49bC2237e4fB93e3eB687d57eAb, 4);
+        _vote(0xEAc16CDbc9901920d90bE4808D38aA73Db8CA5Eb, 0x149005A8c7cDc49bC2237e4fB93e3eB687d57eAb, 4);
         /**
         Votos C
         */
@@ -155,8 +155,7 @@ contract ContractERC20 {
         /**
         Votos D
         */
-        _vote(0x4E868D58667245f7FE0026679E235b080Af67B9a, 0x249Bfc4F95425243a4C3F536097a445B91Db3417, 4);
-        _vote(0xEAc16CDbc9901920d90bE4808D38aA73Db8CA5Eb, 0x249Bfc4F95425243a4C3F536097a445B91Db3417, 5);
+        _vote(0xEAc16CDbc9901920d90bE4808D38aA73Db8CA5Eb, 0x249Bfc4F95425243a4C3F536097a445B91Db3417, 9);
         return true;
     }
 
